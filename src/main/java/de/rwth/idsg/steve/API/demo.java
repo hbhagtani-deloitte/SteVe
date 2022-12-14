@@ -13,15 +13,14 @@ import de.rwth.idsg.steve.web.controller.OcppTagsController;
 import de.rwth.idsg.steve.web.dto.ChargePointForm;
 import de.rwth.idsg.steve.web.dto.OcppJsonStatus;
 import de.rwth.idsg.steve.web.dto.OcppTagForm;
+import de.rwth.idsg.steve.web.dto.ocpp.CancelReservationParams;
 import de.rwth.idsg.steve.web.dto.ocpp.ReserveNowParams;
 import ocpp.cs._2015._10.BootNotificationRequest;
 import ocpp.cs._2015._10.BootNotificationResponse;
-import org.checkerframework.checker.units.qual.C;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Max;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -55,7 +54,7 @@ public class demo {
     @Autowired
     private ChargePointRepository chargePointRepository;
 
-    @GetMapping("/hello")
+    @PostMapping("/hello")
     public String helloFunction(){
         return "Budget ggwp";
     }
@@ -86,9 +85,21 @@ public class demo {
         return finalArray;
     }
 
+//    @PostMapping("/reserveNow")
+//    public String reservationStart(@RequestBody ReserveNowParams reserveNowParams){
+//        try{
+//            reserveNowParams.setChargePointSelectList(reserveNowParams.getChargePointSelectList());
+//            reserveNowParams.setExpiry(reserveNowParams.getExpiry());
+//            reserveNowParams.setIdTag(reserveNowParams.getIdTag());
+//            reserveNowParams.setConnectorId(reserveNowParams.getConnectorId());
+//        return "Done";}
+//        catch (Exception e){
+//            return String.valueOf(e);
+//        }
+//    }
+
     @PostMapping("/reserveNow")
     public String reservationStart(@RequestParam String connectorId, @RequestParam String expiry, @RequestParam String idTag, @RequestParam String chargePoints){
-
         try{
             ReserveNowParams reserveNowParams=new ReserveNowParams();
             ChargePointSelect var1=new ChargePointSelect(JSON, chargePoints);
@@ -99,12 +110,30 @@ public class demo {
             reserveNowParams.setIdTag(idTag);
             reserveNowParams.setConnectorId(Integer.valueOf(connectorId));
             int a=chargePointService16_client.reserveNow(reserveNowParams);
-        System.out.println(a);
-        return "Done";}
+            System.out.println(a);
+            return "Done";}
         catch (Exception e){
             return String.valueOf(e);
         }
     }
+    @PostMapping("/reserveCancel")
+    public String reservationCancelled(@RequestParam String reservationId, @RequestParam String chargePoints){
+        try{
+//            (@RequestBody CancelReservationParams cancelReservationParams){
+        CancelReservationParams cancelReservationParams= new CancelReservationParams();
+        ChargePointSelect var1=new ChargePointSelect(JSON, chargePoints);
+        List<ChargePointSelect> var= new ArrayList<>();
+        var.add(var1);
+        cancelReservationParams.setChargePointSelectList(var);
+        cancelReservationParams.setReservationId(Integer.valueOf(reservationId));
+        System.out.println(reservationId);
+        int a=chargePointService16_client.cancelReservation(cancelReservationParams);
+        System.out.println(a);
+        return "Done";
+    }
+        catch (Exception e){
+            return "Not";
+        }}
 
     @GetMapping("/ocppTags")
     public String findOcppTags(@RequestParam String idTag,@RequestParam String parentIdTag,@RequestParam String expiryDate, @RequestParam String maxActiveTransactionCount, @RequestParam String note){
@@ -125,6 +154,8 @@ public class demo {
 
     // add user for ocpp tag
     // cancel reservation
+
+
 
 
     private Hashtable<String, String> stringToJson(String a, String b){

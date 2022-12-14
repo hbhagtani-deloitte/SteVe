@@ -149,6 +149,7 @@ public class ChargePointService15_Client extends ChargePointService12_Client {
 
     public int cancelReservation(CancelReservationParams params) {
         CancelReservationTask task = new CancelReservationTask(getVersion(), params, reservationRepository);
+//        System.out.println("In cancel reservation service");
 
         BackgroundService.with(executorService)
                          .forFirst(task.getParams().getChargePointSelectList())

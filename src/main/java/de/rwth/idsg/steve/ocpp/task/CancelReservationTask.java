@@ -39,6 +39,7 @@ public class CancelReservationTask extends Ocpp15AndAboveTask<CancelReservationP
     public CancelReservationTask(OcppVersion ocppVersion, CancelReservationParams params,
                                  ReservationRepository reservationRepository) {
         super(ocppVersion, params);
+//        System.out.println("Inside cancel reservation task");
         this.reservationRepository = reservationRepository;
     }
 
