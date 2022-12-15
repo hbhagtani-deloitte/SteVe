@@ -117,14 +117,14 @@ public class demo {
     }
 
 
-    @GetMapping("/ocppTags")
-    public String findOcppTags(@RequestParam String idTag,@RequestParam String parentIdTag,@RequestParam String expiryDate, @RequestParam String maxActiveTransactionCount, @RequestParam String note){
+    @PostMapping("/ocppTags")
+    public String findOcppTags(@RequestBody HashMap<String, String> hashMap){
         OcppTagForm params= new OcppTagForm();
-        params.setIdTag(idTag);
-        params.setParentIdTag(parentIdTag);
-        params.setExpiryDate(LocalDateTime.parse(expiryDate));
-        params.setNote(note);
-        params.setMaxActiveTransactionCount(Integer.valueOf(maxActiveTransactionCount));
+        params.setIdTag(hashMap.get("idTag"));
+        params.setParentIdTag(hashMap.get("parentIdTag"));
+        params.setExpiryDate(LocalDateTime.parse(hashMap.get("expiryDate")));
+        params.setNote(hashMap.get("note"));
+        params.setMaxActiveTransactionCount(Integer.valueOf(hashMap.get("maxActiveTransactionCount")));
         ocppTagsController.add(params);
         return "Done";
     }
