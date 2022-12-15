@@ -18,9 +18,11 @@
  */
 package de.rwth.idsg.steve.repository.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.rwth.idsg.steve.ocpp.OcppTransport;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Sevket Goekay <sevketgokay@gmail.com>

@@ -1,6 +1,6 @@
 package de.rwth.idsg.steve.API;
 
-import de.rwth.idsg.steve.ocpp.OcppProtocol;
+import de.rwth.idsg.steve.API.dto.OcppJsonStatusResponse;
 import de.rwth.idsg.steve.repository.ChargePointRepository;
 import de.rwth.idsg.steve.repository.OcppTagRepository;
 import de.rwth.idsg.steve.repository.dto.ChargePointSelect;
@@ -15,13 +15,12 @@ import de.rwth.idsg.steve.web.dto.OcppJsonStatus;
 import de.rwth.idsg.steve.web.dto.OcppTagForm;
 import de.rwth.idsg.steve.web.dto.ocpp.CancelReservationParams;
 import de.rwth.idsg.steve.web.dto.ocpp.ReserveNowParams;
-import ocpp.cs._2015._10.BootNotificationRequest;
-import ocpp.cs._2015._10.BootNotificationResponse;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -54,86 +53,69 @@ public class demo {
     @Autowired
     private ChargePointRepository chargePointRepository;
 
-    @PostMapping("/hello")
+    @GetMapping("/hello")
     public String helloFunction(){
         return "Budget ggwp";
     }
 
+    //Adding a new charge ponint to server
     @PostMapping("/chargePointAddition")
     public String chargePointsAddition(@RequestBody ChargePointForm form){
         chargePointsController.add(form);
         return "Done";
     }
 
-    @PostMapping("/bootNotification")
-    public Hashtable<String, String> addBootNotification(@RequestBody BootNotificationRequest parameters, @RequestParam String chargeBoxIdentity, @RequestParam OcppProtocol ocppProtocol)
-    {
-        BootNotificationResponse b= (BootNotificationResponse) centralSystemService16_service.bootNotification(parameters,chargeBoxIdentity , ocppProtocol);
-        String a = b.toString();
-        Hashtable<String, String> json= stringToJson(a, "BootNotificationResponse");
-            return  json;
-    }
+    //Get all Active  Charge point
+    @GetMapping("/connectedChargePoint")
+    public ArrayList<OcppJsonStatusResponse> getConnectedChargeBox() {
+        List<OcppJsonStatus> list = chargePointHelperService.getOcppJsonStatus();
+        ArrayList<OcppJsonStatusResponse> responses = new ArrayList<>();
 
-    @GetMapping("/connectedCS")
-    public ArrayList<Hashtable<String, String>> getConnectedChargeBox() {
-        List<OcppJsonStatus> a = chargePointHelperService.getOcppJsonStatus();
-        ArrayList<Hashtable<String, String>> finalArray= new ArrayList();
-        for(int i=0; i<a.size();i++) {
-            Hashtable<String, String> json= stringToJson(String.valueOf(a.get(i)), "OcppJsonStatus");
-            finalArray.add(json);
+        for (int i=0;i<list.size();i++)
+        {
+            OcppJsonStatus ocppJsonStatus = list.get(i);
+            OcppJsonStatusResponse ocppJsonStatusResponse = new OcppJsonStatusResponse();
+            ocppJsonStatusResponse.setChargeBoxId(ocppJsonStatus.getChargeBoxId());
+            ocppJsonStatusResponse.setConnectedSince(ocppJsonStatus.getConnectedSince());
+            ocppJsonStatusResponse.setVersion(ocppJsonStatus.getVersion());
+            ocppJsonStatusResponse.setChargeBoxPk(ocppJsonStatus.getChargeBoxPk());
+            ocppJsonStatusResponse.setConnectionDuration(ocppJsonStatus.getConnectionDuration());
+            ocppJsonStatusResponse.setConnectedSinceDT(ocppJsonStatus.getConnectedSinceDT().toString());
+            responses.add(ocppJsonStatusResponse);
         }
-        return finalArray;
+        return responses;
     }
 
-//    @PostMapping("/reserveNow")
-//    public String reservationStart(@RequestBody ReserveNowParams reserveNowParams){
-//        try{
-//            reserveNowParams.setChargePointSelectList(reserveNowParams.getChargePointSelectList());
-//            reserveNowParams.setExpiry(reserveNowParams.getExpiry());
-//            reserveNowParams.setIdTag(reserveNowParams.getIdTag());
-//            reserveNowParams.setConnectorId(reserveNowParams.getConnectorId());
-//        return "Done";}
-//        catch (Exception e){
-//            return String.valueOf(e);
-//        }
-//    }
+    //Get ALl active Connector of chargers
+    @GetMapping("/getAllConnectors")
+    public List<Integer> getNonZeroConnectorIds(@RequestParam String chargeBoxIdentity){
+        return chargePointRepository.getNonZeroConnectorIds(chargeBoxIdentity);
+    }
+
 
     @PostMapping("/reserveNow")
-    public String reservationStart(@RequestParam String connectorId, @RequestParam String expiry, @RequestParam String idTag, @RequestParam String chargePoints){
+    public String reservationStart(@RequestBody HashMap<String,String> hashMap){
+        System.out.println("Get callled by csms");
         try{
-            ReserveNowParams reserveNowParams=new ReserveNowParams();
-            ChargePointSelect var1=new ChargePointSelect(JSON, chargePoints);
-            List<ChargePointSelect> var= new ArrayList<>();
+            ReserveNowParams reserveNowParams = new ReserveNowParams();
+
+            ChargePointSelect var1 = new ChargePointSelect(JSON, hashMap.get("chargerName"));
+            List<ChargePointSelect> var = new ArrayList<>();
             var.add(var1);
             reserveNowParams.setChargePointSelectList(var);
-            reserveNowParams.setExpiry(LocalDateTime.parse(expiry));
-            reserveNowParams.setIdTag(idTag);
-            reserveNowParams.setConnectorId(Integer.valueOf(connectorId));
-            int a=chargePointService16_client.reserveNow(reserveNowParams);
+            String expiryTime = hashMap.get("expiryTime");
+            reserveNowParams.setExpiry(LocalDateTime.parse(expiryTime));
+            reserveNowParams.setIdTag(hashMap.get("customerTag"));
+            reserveNowParams.setConnectorId(Integer.valueOf(hashMap.get("connectorId")));
+            int a = chargePointService16_client.reserveNow(reserveNowParams);
             System.out.println(a);
-            return "Done";}
+            return "Done";
+        }
         catch (Exception e){
             return String.valueOf(e);
         }
     }
-    @PostMapping("/reserveCancel")
-    public String reservationCancelled(@RequestParam String reservationId, @RequestParam String chargePoints){
-        try{
-//            (@RequestBody CancelReservationParams cancelReservationParams){
-        CancelReservationParams cancelReservationParams= new CancelReservationParams();
-        ChargePointSelect var1=new ChargePointSelect(JSON, chargePoints);
-        List<ChargePointSelect> var= new ArrayList<>();
-        var.add(var1);
-        cancelReservationParams.setChargePointSelectList(var);
-        cancelReservationParams.setReservationId(Integer.valueOf(reservationId));
-        System.out.println(reservationId);
-        int a=chargePointService16_client.cancelReservation(cancelReservationParams);
-        System.out.println(a);
-        return "Done";
-    }
-        catch (Exception e){
-            return "Not";
-        }}
+
 
     @GetMapping("/ocppTags")
     public String findOcppTags(@RequestParam String idTag,@RequestParam String parentIdTag,@RequestParam String expiryDate, @RequestParam String maxActiveTransactionCount, @RequestParam String note){
@@ -147,14 +129,24 @@ public class demo {
         return "Done";
     }
 
-    @GetMapping("/getAllConnectors")
-    public List<Integer> getNonZeroConnectorIds(@RequestParam String chargeBoxIdentity){
-        return chargePointRepository.getNonZeroConnectorIds(chargeBoxIdentity);
+    @PostMapping("/reserveCancel")
+    public String reservationCancelled(@RequestParam String reservationId, @RequestParam String chargePoints){
+        try{
+            CancelReservationParams cancelReservationParams= new CancelReservationParams();
+            ChargePointSelect var1=new ChargePointSelect(JSON, chargePoints);
+            List<ChargePointSelect> var= new ArrayList<>();
+            var.add(var1);
+            cancelReservationParams.setChargePointSelectList(var);
+            cancelReservationParams.setReservationId(Integer.valueOf(reservationId));
+            System.out.println(reservationId);
+            int a=chargePointService16_client.cancelReservation(cancelReservationParams);
+            System.out.println(a);
+            return "Done";
+        }
+        catch (Exception e){
+            return "Not";
+        }
     }
-
-    // add user for ocpp tag
-    // cancel reservation
-
 
 
 
@@ -170,4 +162,7 @@ public class demo {
         }
         return json;
     }
+
+
+
 }

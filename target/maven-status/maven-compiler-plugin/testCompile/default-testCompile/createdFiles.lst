@@ -23,9 +23,9 @@ de/rwth/idsg/steve/StressTest.class
 de/rwth/idsg/steve/ocpp/OcppVersionTest.class
 de/rwth/idsg/steve/utils/StringUtilsTest.class
 de/rwth/idsg/steve/utils/__DatabasePreparer__.class
-de/rwth/idsg/steve/issues/Issue72$1.class
 de/rwth/idsg/steve/ApplicationTest.class
 de/rwth/idsg/steve/utils/StressTester.class
+de/rwth/idsg/steve/issues/Issue72$1.class
 de/rwth/idsg/steve/ApplicationJsonTest.class
 de/rwth/idsg/steve/utils/StressTester$Runnable.class
 de/rwth/idsg/steve/utils/TransactionStopServiceHelperTest.class
