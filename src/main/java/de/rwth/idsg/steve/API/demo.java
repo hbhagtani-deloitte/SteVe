@@ -1,9 +1,12 @@
 package de.rwth.idsg.steve.API;
 
 import de.rwth.idsg.steve.API.dto.OcppJsonStatusResponse;
+import de.rwth.idsg.steve.API.dto.ReservationResponse;
 import de.rwth.idsg.steve.repository.ChargePointRepository;
 import de.rwth.idsg.steve.repository.OcppTagRepository;
+import de.rwth.idsg.steve.repository.ReservationRepository;
 import de.rwth.idsg.steve.repository.dto.ChargePointSelect;
+import de.rwth.idsg.steve.repository.dto.Reservation;
 import de.rwth.idsg.steve.service.CentralSystemService16_Service;
 import de.rwth.idsg.steve.service.ChargePointHelperService;
 import de.rwth.idsg.steve.service.ChargePointService16_Client;
@@ -13,6 +16,7 @@ import de.rwth.idsg.steve.web.controller.OcppTagsController;
 import de.rwth.idsg.steve.web.dto.ChargePointForm;
 import de.rwth.idsg.steve.web.dto.OcppJsonStatus;
 import de.rwth.idsg.steve.web.dto.OcppTagForm;
+import de.rwth.idsg.steve.web.dto.ReservationQueryForm;
 import de.rwth.idsg.steve.web.dto.ocpp.CancelReservationParams;
 import de.rwth.idsg.steve.web.dto.ocpp.ReserveNowParams;
 import org.joda.time.LocalDateTime;
@@ -44,6 +48,7 @@ public class demo {
     @Autowired
     private ChargePointService16_Client chargePointService16_client;
 
+
     @Autowired
     private OcppTagsController ocppTagsController;
 
@@ -52,6 +57,9 @@ public class demo {
 
     @Autowired
     private ChargePointRepository chargePointRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @GetMapping("/hello")
     public String helloFunction(){
@@ -88,8 +96,8 @@ public class demo {
 
     //Get ALl active Connector of chargers
     @GetMapping("/getAllConnectors")
-    public List<Integer> getNonZeroConnectorIds(@RequestParam String chargeBoxIdentity){
-        return chargePointRepository.getNonZeroConnectorIds(chargeBoxIdentity);
+    public ArrayList<Integer> getNonZeroConnectorIds(@RequestParam String chargeBoxIdentity){
+        return (ArrayList<Integer>) chargePointRepository.getNonZeroConnectorIds(chargeBoxIdentity);
     }
 
 
@@ -115,6 +123,32 @@ public class demo {
             return String.valueOf(e);
         }
     }
+    //For reservation via ocpp tag
+    @GetMapping("/reservations")
+    public ArrayList<ReservationResponse> getAllReservationByOcppTag(@RequestParam String ocppTag){
+        ReservationQueryForm reservationQueryForm= new ReservationQueryForm();
+        reservationQueryForm.setOcppIdTag(ocppTag);
+        List<Reservation> var= reservationRepository.getReservations(reservationQueryForm);
+        ArrayList<ReservationResponse> responses= new ArrayList<>();
+        for (int i=0;i<var.size();i++)
+        {
+            Reservation reservation = var.get(i);
+            ReservationResponse reservationResponse = new ReservationResponse();
+            reservationResponse.setChargeBoxId(reservation.getChargeBoxId());
+            reservationResponse.setOcppIdTag(reservation.getOcppIdTag());
+            reservationResponse.setConnectorId(reservation.getConnectorId());
+            reservationResponse.setStatus(reservation.getStatus());
+            reservationResponse.setTransactionId(reservation.getTransactionId());
+            reservationResponse.setExpiryDatetime(reservation.getExpiryDatetime().toString());
+            reservationResponse.setStartDatetime(reservation.getStartDatetime().toString());
+            responses.add(reservationResponse);
+        }
+        return responses;
+//        for(int i=0; i< var.size(); i++) {
+//            System.out.println(var.get(i));
+//        }
+//        return "True";
+    }
 
 
     @PostMapping("/ocppTags")
@@ -130,15 +164,18 @@ public class demo {
     }
 
     @PostMapping("/reserveCancel")
-    public String reservationCancelled(@RequestParam String reservationId, @RequestParam String chargePoints){
+    public String reservationCancelled(@RequestBody HashMap<String,String> hashMap){
+//            (@RequestParam String reservationId, @RequestParam String chargePoints){
         try{
             CancelReservationParams cancelReservationParams= new CancelReservationParams();
-            ChargePointSelect var1=new ChargePointSelect(JSON, chargePoints);
+            ChargePointSelect var1=new ChargePointSelect(JSON,"Charger BE");
+//            ChargePointSelect var1=new ChargePointSelect(JSON, hashMap.get("chargerName"));
             List<ChargePointSelect> var= new ArrayList<>();
             var.add(var1);
+            System.out.println(hashMap);
             cancelReservationParams.setChargePointSelectList(var);
-            cancelReservationParams.setReservationId(Integer.valueOf(reservationId));
-            System.out.println(reservationId);
+//            cancelReservationParams.setReservationId(Integer.valueOf(hashMap.get("reservationId")));
+            cancelReservationParams.setReservationId(Integer.valueOf(6));
             int a=chargePointService16_client.cancelReservation(cancelReservationParams);
             System.out.println(a);
             return "Done";
@@ -147,9 +184,6 @@ public class demo {
             return "Not";
         }
     }
-
-
-
     private Hashtable<String, String> stringToJson(String a, String b){
         String[] parts = a.split(b);
         String str = parts[1];
@@ -162,7 +196,5 @@ public class demo {
         }
         return json;
     }
-
-
 
 }
