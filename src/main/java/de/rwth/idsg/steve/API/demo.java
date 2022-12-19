@@ -138,9 +138,11 @@ public class demo {
             reservationResponse.setOcppIdTag(reservation.getOcppIdTag());
             reservationResponse.setConnectorId(reservation.getConnectorId());
             reservationResponse.setStatus(reservation.getStatus());
-            reservationResponse.setTransactionId(reservation.getTransactionId());
-            reservationResponse.setExpiryDatetime(reservation.getExpiryDatetime().toString());
-            reservationResponse.setStartDatetime(reservation.getStartDatetime().toString());
+            reservationResponse.setTransactionId(0);
+            reservationResponse.setExpiryDatetime(reservation.getExpiryDatetimeDT().toString());
+            reservationResponse.setStartDatetime(reservation.getStartDatetimeDT().toString());
+            reservationResponse.setReservationId(reservation.getId());
+//            System.out.println("++++++++++++++++++++++++++++++++++"+reservation.getId());
             responses.add(reservationResponse);
         }
         return responses;
@@ -168,16 +170,16 @@ public class demo {
 //            (@RequestParam String reservationId, @RequestParam String chargePoints){
         try{
             CancelReservationParams cancelReservationParams= new CancelReservationParams();
-            ChargePointSelect var1=new ChargePointSelect(JSON,"Charger BE");
-//            ChargePointSelect var1=new ChargePointSelect(JSON, hashMap.get("chargerName"));
+//            ChargePointSelect var1=new ChargePointSelect(JSON,"Charger BE");
+            ChargePointSelect var1=new ChargePointSelect(JSON, hashMap.get("chargerName"));
             List<ChargePointSelect> var= new ArrayList<>();
             var.add(var1);
             System.out.println(hashMap);
             cancelReservationParams.setChargePointSelectList(var);
-//            cancelReservationParams.setReservationId(Integer.valueOf(hashMap.get("reservationId")));
-            cancelReservationParams.setReservationId(Integer.valueOf(6));
+            cancelReservationParams.setReservationId(Integer.valueOf(hashMap.get("reservationId")));
+//            cancelReservationParams.setReservationId(Integer.valueOf(6));
             int a=chargePointService16_client.cancelReservation(cancelReservationParams);
-            System.out.println(a);
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+a+"SSSSSSSSSSSSSS"+hashMap);
             return "Done";
         }
         catch (Exception e){
