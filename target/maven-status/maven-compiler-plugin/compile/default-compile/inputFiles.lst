@@ -38,6 +38,7 @@
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/service/MailService.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ChargePointService16_Invoker.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/web/BatchInsertConverter.java
+/home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/API/ChargePoint.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ChargePointService15_Invoker.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/repository/dto/TransactionDetails.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/task/ClearCacheTask.java
@@ -143,7 +144,6 @@
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/task/ClearChargingProfileTask.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ws/custom/CustomStringModule.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/web/validation/ChargeBoxIdValidator.java
-/home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/API/demo.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/web/dto/EndpointInfo.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/web/controller/Ocpp15Controller.java
 /home/snehagrawal5/Videos/SteVe/target/generated-sources/jooq/steve/db/tables/records/ConnectorStatusRecord.java
@@ -157,6 +157,7 @@
 /home/snehagrawal5/Videos/SteVe/target/generated-sources/jooq/steve/db/tables/records/ReservationRecord.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/utils/mapper/AddressMapper.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/utils/mapper/OcppTagFormMapper.java
+/home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/API/Reservation.java
 /home/snehagrawal5/Videos/SteVe/target/generated-sources/jooq/steve/db/Stevedb.java
 /home/snehagrawal5/Videos/SteVe/target/generated-sources/jooq/steve/db/tables/Connector.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ws/data/OcppJsonResult.java
@@ -166,6 +167,7 @@
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ws/ocpp12/Ocpp12TypeStore.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/utils/CustomDSL.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/utils/mapper/ChargePointDetailsMapper.java
+/home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/API/User.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ws/TypeStore.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/web/dto/ChargingProfileQueryForm.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/web/controller/ChargePointsController.java

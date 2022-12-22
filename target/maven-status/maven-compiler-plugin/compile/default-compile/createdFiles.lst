@@ -323,7 +323,6 @@ de/rwth/idsg/steve/ocpp/ws/data/CommunicationContext$DummyResponse.class
 de/rwth/idsg/steve/ocpp/task/SetChargingProfileTask.class
 de/rwth/idsg/steve/ocpp/task/ClearChargingProfileTask$1.class
 de/rwth/idsg/steve/repository/dto/Transaction.class
-de/rwth/idsg/steve/API/demo.class
 de/rwth/idsg/steve/ocpp/ChargePointService16_InvokerImpl.class
 de/rwth/idsg/steve/repository/impl/GenericRepositoryImpl.class
 jooq/steve/db/tables/Settings.class
