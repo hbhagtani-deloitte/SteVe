@@ -6,6 +6,7 @@ import de.rwth.idsg.steve.service.ChargePointHelperService;
 import de.rwth.idsg.steve.web.controller.ChargePointsController;
 import de.rwth.idsg.steve.web.dto.ChargePointForm;
 import de.rwth.idsg.steve.web.dto.OcppJsonStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

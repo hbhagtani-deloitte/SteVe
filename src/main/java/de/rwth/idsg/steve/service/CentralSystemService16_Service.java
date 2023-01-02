@@ -19,6 +19,7 @@
 package de.rwth.idsg.steve.service;
 
 import de.rwth.idsg.steve.ocpp.OcppProtocol;
+import de.rwth.idsg.steve.repository.ChargePointRepository;
 import de.rwth.idsg.steve.repository.OcppServerRepository;
 import de.rwth.idsg.steve.repository.SettingsRepository;
 import de.rwth.idsg.steve.repository.dto.InsertConnectorStatusParams;
@@ -61,6 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -73,6 +75,8 @@ public class CentralSystemService16_Service {
 
     @Autowired private OcppServerRepository ocppServerRepository;
     @Autowired private SettingsRepository settingsRepository;
+    @Autowired
+    private ChargePointRepository chargePointRepository;
 
     @Autowired private OcppTagService ocppTagService;
     @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -151,6 +155,21 @@ public class CentralSystemService16_Service {
     }
 
     public MeterValuesResponse meterValues(MeterValuesRequest parameters, String chargeBoxIdentity) {
+        System.out.println("Inside meterValues ocpp 16");
+        System.out.println(parameters.getConnectorId());
+        if(!(parameters.getConnectorId() == 1 || parameters.getConnectorId() == 2)){
+            System.out.println("Connector Id can be either 1 or 2");
+            return new MeterValuesResponse();
+        }
+        List<Integer> records = chargePointRepository.getNonZeroConnectorIds(chargeBoxIdentity);
+        int connId = parameters.getConnectorId();
+        for(Integer id : records){
+            if(id == connId){
+                System.out.println("connector id is already present");
+                return new MeterValuesResponse();
+            }
+        }
+
         ocppServerRepository.insertMeterValues(
                 chargeBoxIdentity,
                 parameters.getMeterValue(),
