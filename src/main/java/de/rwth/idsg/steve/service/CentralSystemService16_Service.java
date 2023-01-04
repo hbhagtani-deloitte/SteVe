@@ -18,6 +18,7 @@
  */
 package de.rwth.idsg.steve.service;
 
+import de.rwth.idsg.steve.API.ChargePoint;
 import de.rwth.idsg.steve.ocpp.OcppProtocol;
 import de.rwth.idsg.steve.repository.ChargePointRepository;
 import de.rwth.idsg.steve.repository.OcppServerRepository;
@@ -77,6 +78,7 @@ public class CentralSystemService16_Service {
     @Autowired private SettingsRepository settingsRepository;
     @Autowired
     private ChargePointRepository chargePointRepository;
+    @Autowired private ChargePoint chargePoint;
 
     @Autowired private OcppTagService ocppTagService;
     @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -145,6 +147,8 @@ public class CentralSystemService16_Service {
                                            .build();
 
         ocppServerRepository.insertConnectorStatus(params);
+
+        chargePoint.sendStatusNotifiactiontoCSMS(timestamp,chargeBoxIdentity, parameters.getErrorCode().value(),parameters.getConnectorId());
 
         if (parameters.getStatus() == ChargePointStatus.FAULTED) {
             applicationEventPublisher.publishEvent(new OcppStationStatusFailure(
