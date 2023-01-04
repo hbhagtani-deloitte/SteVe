@@ -71,7 +71,6 @@ public class ChargePoint {
         return (ArrayList<Integer>) chargePointRepository.getNonZeroConnectorIds(chargeBoxIdentity);
     }
 
-
     public void sendStatusNotifiactiontoCSMS(DateTime timestamp , String chargeBoxId , String errorCode, int connectorId){
         HashMap<String, String> store= new HashMap<>();
         store.put("timestamp", String.valueOf(timestamp));
