@@ -19,6 +19,7 @@
 package de.rwth.idsg.steve.service;
 
 import de.rwth.idsg.steve.API.ChargePoint;
+import de.rwth.idsg.steve.API.Transaction;
 import de.rwth.idsg.steve.ocpp.OcppProtocol;
 import de.rwth.idsg.steve.repository.ChargePointRepository;
 import de.rwth.idsg.steve.repository.OcppServerRepository;
@@ -79,6 +80,7 @@ public class CentralSystemService16_Service {
     @Autowired
     private ChargePointRepository chargePointRepository;
     @Autowired private ChargePoint chargePoint;
+    @Autowired private Transaction transaction;
 
     @Autowired private OcppTagService ocppTagService;
     @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -210,6 +212,7 @@ public class CentralSystemService16_Service {
                                        .eventTimestamp(DateTime.now())
                                        .build();
 
+        transaction.sendStartTransactionNotifiactiontoCSMS(chargeBoxIdentity,parameters.getConnectorId(), parameters.getIdTag(),parameters.getTimestamp(),parameters.getMeterStart(),parameters.getReservationId(),1);
         int transactionId = ocppServerRepository.insertTransaction(params);
 
         applicationEventPublisher.publishEvent(new OcppTransactionStarted(transactionId, params));
@@ -240,6 +243,11 @@ public class CentralSystemService16_Service {
                                        .eventTimestamp(DateTime.now())
                                        .eventActor(TransactionStopEventActor.station)
                                        .build();
+        System.out.println("----------------------------------------"+parameters);
+//        System.out.println("----------------------------------------"+parameters.get);
+
+
+        transaction.sendStopTransactionNotifiactiontoCSMS(chargeBoxIdentity,transactionId,parameters.getTimestamp(),parameters.getMeterStop(),stopReason,0, parameters.getIdTag());
 
         ocppServerRepository.updateTransaction(params);
 
