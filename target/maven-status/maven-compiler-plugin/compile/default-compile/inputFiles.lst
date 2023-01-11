@@ -116,6 +116,7 @@
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/utils/StringUtils.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/task/ReserveNowTask.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ws/pipeline/Sender.java
+/home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/API/Transaction.java
 /home/snehagrawal5/Videos/SteVe/target/generated-sources/jooq/steve/db/tables/records/SettingsRecord.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/ocpp/ws/PingTask.java
 /home/snehagrawal5/Videos/SteVe/src/main/java/de/rwth/idsg/steve/service/BackgroundService.java

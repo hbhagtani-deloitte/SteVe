@@ -23,15 +23,16 @@ import de.rwth.idsg.steve.API.Transaction;
 import de.rwth.idsg.steve.ocpp.OcppProtocol;
 import de.rwth.idsg.steve.repository.ChargePointRepository;
 import de.rwth.idsg.steve.repository.OcppServerRepository;
+import de.rwth.idsg.steve.repository.ReservationRepository;
 import de.rwth.idsg.steve.repository.SettingsRepository;
-import de.rwth.idsg.steve.repository.dto.InsertConnectorStatusParams;
-import de.rwth.idsg.steve.repository.dto.InsertTransactionParams;
-import de.rwth.idsg.steve.repository.dto.UpdateChargeboxParams;
-import de.rwth.idsg.steve.repository.dto.UpdateTransactionParams;
+import de.rwth.idsg.steve.repository.dto.*;
+import de.rwth.idsg.steve.repository.impl.ReservationRepositoryImpl;
 import de.rwth.idsg.steve.service.notification.OccpStationBooted;
 import de.rwth.idsg.steve.service.notification.OcppStationStatusFailure;
 import de.rwth.idsg.steve.service.notification.OcppTransactionEnded;
 import de.rwth.idsg.steve.service.notification.OcppTransactionStarted;
+import de.rwth.idsg.steve.web.dto.QueryForm;
+import de.rwth.idsg.steve.web.dto.ReservationQueryForm;
 import jooq.steve.db.enums.TransactionStopEventActor;
 import lombok.extern.slf4j.Slf4j;
 import ocpp.cs._2015._10.AuthorizationStatus;
@@ -85,6 +86,7 @@ public class CentralSystemService16_Service {
     @Autowired private OcppTagService ocppTagService;
     @Autowired private ApplicationEventPublisher applicationEventPublisher;
     @Autowired private ChargePointHelperService chargePointHelperService;
+    @Autowired private ReservationRepository reservationRepository;
 
     public BootNotificationResponse bootNotification(BootNotificationRequest parameters, String chargeBoxIdentity,
                                                      OcppProtocol ocppProtocol) {
@@ -212,6 +214,15 @@ public class CentralSystemService16_Service {
                                        .eventTimestamp(DateTime.now())
                                        .build();
 
+//        ReservationQueryForm reservationQueryForm= new ReservationQueryForm();
+//        reservationQueryForm.setOcppIdTag(parameters.getIdTag());
+//        ReservationQueryForm reservationQueryForm= new ReservationQueryForm();
+//        reservationQueryForm.setOcppIdTag(parameters.getIdTag());
+//        System.out.println(parameters.getIdTag().getClass());
+//        System.out.println(reservationRepository.getActiveReservationIds(chargeBoxIdentity));
+//        List<de.rwth.idsg.steve.repository.dto.Reservation> var= reservationRepository.getReservations(reservationQueryForm);
+//        System.out.println("+"+ var);
+
         transaction.sendStartTransactionNotifiactiontoCSMS(chargeBoxIdentity,parameters.getConnectorId(), parameters.getIdTag(),parameters.getTimestamp(),parameters.getMeterStart(),parameters.getReservationId(),1);
         int transactionId = ocppServerRepository.insertTransaction(params);
 
@@ -244,7 +255,6 @@ public class CentralSystemService16_Service {
                                        .eventActor(TransactionStopEventActor.station)
                                        .build();
         System.out.println("----------------------------------------"+parameters);
-//        System.out.println("----------------------------------------"+parameters.get);
 
 
         transaction.sendStopTransactionNotifiactiontoCSMS(chargeBoxIdentity,transactionId,parameters.getTimestamp(),parameters.getMeterStop(),stopReason,0, parameters.getIdTag());

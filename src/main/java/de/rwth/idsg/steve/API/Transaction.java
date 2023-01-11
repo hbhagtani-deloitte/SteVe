@@ -35,7 +35,7 @@ public class Transaction {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         String result = new RestTemplate().postForObject(url, store, String.class);
-        System.out.println(result);
+//        System.out.println(result);
     }
 
     public void sendStopTransactionNotifiactiontoCSMS(String chargeBoxIdentity, Integer transactionId, DateTime timestamp,Integer MeterStop,String stopReason, Integer statusOfTransaction, String idTag){
@@ -52,6 +52,6 @@ public class Transaction {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         String result = new RestTemplate().postForObject(url, store, String.class);
-        System.out.println(result);
+//        System.out.println(result);
     }
 }
