@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.web.client.RestTemplate;
+
+import javax.validation.Valid;
 
 @RestController
 public class ChargePoint {
@@ -41,6 +45,15 @@ public class ChargePoint {
     @PostMapping("/chargePointAddition")
     public String chargePointsAddition(@RequestBody ChargePointForm form){
         chargePointsController.add(form);
+        return "Done";
+    }
+    @PostMapping("/chargePointDelete")
+    public String chargePointsDelete(@RequestBody String chargeBoxId){
+        System.out.println(chargeBoxId);
+        List<String> chargePoints=chargePointRepository.getChargeBoxIds();
+        HashMap<String, Integer> chargeBoxIdPkPair= (HashMap<String, Integer>) chargePointRepository.getChargeBoxIdPkPair(chargePoints);
+        System.out.println(chargeBoxIdPkPair);
+        chargePointRepository.deleteChargePoint(chargeBoxIdPkPair.get(chargeBoxId));
         return "Done";
     }
 

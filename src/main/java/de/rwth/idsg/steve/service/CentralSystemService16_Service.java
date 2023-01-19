@@ -214,15 +214,6 @@ public class CentralSystemService16_Service {
                                        .eventTimestamp(DateTime.now())
                                        .build();
 
-//        ReservationQueryForm reservationQueryForm= new ReservationQueryForm();
-//        reservationQueryForm.setChargeBoxId(parameters.getIdTag());
-//        ReservationQueryForm reservationQueryForm= new ReservationQueryForm();
-//        reservationQueryForm.setOcppIdTag(parameters.getIdTag());
-//        System.out.println(parameters.getIdTag().getClass());
-//        System.out.println(reservationRepository.getActiveReservationIds(chargeBoxIdentity));
-//        List<de.rwth.idsg.steve.repository.dto.Reservation> var= reservationRepository.getReservations(reservationQueryForm);
-//        System.out.println("+"+ var);
-//
         Integer flag=0;
         List<Integer> activeReservation=reservationRepository.getActiveReservationIds(chargeBoxIdentity);
         for(Integer i : activeReservation){
@@ -241,8 +232,6 @@ public class CentralSystemService16_Service {
             return new StartTransactionResponse()
                     .withIdTagInfo(info)
                     .withTransactionId(transactionId);
-
-
     }
 
     public StopTransactionResponse stopTransaction(StopTransactionRequest parameters, String chargeBoxIdentity) {
