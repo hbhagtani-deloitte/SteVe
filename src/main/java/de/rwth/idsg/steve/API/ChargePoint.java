@@ -39,7 +39,7 @@ public class ChargePoint {
     @Autowired
     private ChargePointRepository chargePointRepository;
 
-    private String API_URL="http://127.0.0.1:8080/";
+    private String API_URL="http://127.0.0.1:8081/ms3";
 
     //Adding a new charge ponint to server
     @PostMapping("/chargePointAddition")

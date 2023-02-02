@@ -19,7 +19,7 @@ import java.util.*;
 @RestController
 public class Transaction {
 
-    private String API_URL="http://127.0.0.1:8080/";
+    private String API_URL="http://127.0.0.1:8081/ms2";
 
     public void sendStartTransactionNotifiactiontoCSMS(String chargeBoxIdentity, Integer connectorId, String idTag, DateTime timestamp,Integer MeterStart,Integer reservationId, Integer statusOfTransaction){
         HashMap<String, String> store= new HashMap<>();
